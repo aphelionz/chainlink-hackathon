@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+
+  orbit-db-http-api:
+    image: orbitdb/orbit-db-http-api
+    command: sh -c "sleep 5s && node src/cli.js api --ipfs-host go-ipfs"
+    environment:
+      HTTPS_CERT: "/api/dev.crt"
+      HTTPS_KEY: "/api/dev.key"
+    networks:
+      - chainlink-demo
+    depends_on:
+      - go-ipfs
+    volumes:
+      - ./dev.crt:/api/dev.crt
+      - ./dev.key:/api/dev.key
+    ports:
+      - "3000:3000"
+
+  go-ipfs:
+    image: ipfs/go-ipfs:v0.6.0
+    networks:
+      - chainlink-demo
+    expose:
+      - "5001"
+
+networks:
+  chainlink-demo:
