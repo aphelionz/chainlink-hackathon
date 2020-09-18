@@ -20,7 +20,7 @@ services:
       ALLOW_ORIGINS: "*"
     volumes:
       - ./.chainlink-ropsten:/chainlink
-    command: ["local", "n"]
+    command: ["local", "n", "-p", "/chainlink/.password", "-a", "/chainlink/.api"]
     depends_on:
       - postgres
 
