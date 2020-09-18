@@ -2,28 +2,58 @@ version: "3.8"
 
 services:
 
-  orbit-db-http-api:
-    image: orbitdb/orbit-db-http-api
-    command: sh -c "sleep 5s && node src/cli.js api --ipfs-host go-ipfs"
-    environment:
-      HTTPS_CERT: "/api/dev.crt"
-      HTTPS_KEY: "/api/dev.key"
-    networks:
-      - chainlink-demo
-    depends_on:
-      - go-ipfs
-    volumes:
-      - ./dev.crt:/api/dev.crt
-      - ./dev.key:/api/dev.key
+  chainlink:
+    image: smartcontract/chainlink:candidate-0.8.16
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - 6688:6688
+    environment:
+      DATABASE_URL: "postgresql://chainlink:hackathon@postgres:5432/chainlink?sslmode=disable"
+      ETH_URL: "wss://cl-ropsten.fiews.io/v1/aQNNYs7XF78LsCND65Rbpj3nPEQ2ADLmFmd6dene"
+      ROOT: /chainlink
+      LOG_LEVEL: debug
+      ETH_CHAIN_ID: 3
+      MIN_OUTGOING_CONFIRMATIONS: 2
+      LINK_CONTRACT_ADDRESS: 0x20fe562d797a42dcb3399062ae9546cd06f63280
+      CHAINLINK_TLS_PORT: 0
+      SECURE_COOKIES: "false"
+      ALLOW_ORIGINS: "*"
+    volumes:
+      - ./.chainlink-ropsten:/chainlink
+    command: ["local", "n"]
+    depends_on:
+      - postgres
 
-  go-ipfs:
-    image: ipfs/go-ipfs:v0.6.0
-    networks:
-      - chainlink-demo
-    expose:
-      - "5001"
+  postgres:
+    image: postgres:12.4-alpine
+    # restart: always
+    environment:
+      POSTGRES_PASSWORD: hackathon
+      POSTGRES_USER: chainlink
+
+
+        #   orbit-db-http-api:
+        #     image: orbitdb/orbit-db-http-api
+        #     command: sh -c "sleep 5s && node src/cli.js api --ipfs-host go-ipfs"
+        #     environment:
+        #       HTTPS_CERT: "/api/dev.crt"
+        #       HTTPS_KEY: "/api/dev.key"
+        #     networks:
+        #       - chainlink-demo
+        #     depends_on:
+        #       - go-ipfs
+        #     volumes:
+        #       - ./dev.crt:/api/dev.crt
+        #       - ./dev.key:/api/dev.key
+        #     ports:
+        #       - "3000:3000"
+        # 
+        #   go-ipfs:
+        #     image: ipfs/go-ipfs:v0.6.0
+        #     networks:
+        #       - chainlink-demo
+        #     expose:
+        #       - "5001"
 
 networks:
   chainlink-demo:
