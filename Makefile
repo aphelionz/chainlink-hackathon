@@ -1,3 +1,9 @@
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down
+
 fake-creds:
 	mkdir -p .chainlink-ropsten
 	echo S0mef4ke455p455 > .chainlink-ropsten/.password

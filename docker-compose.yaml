@@ -5,6 +5,8 @@ services:
   chainlink:
     image: smartcontract/chainlink:candidate-0.8.16
     restart: unless-stopped
+    networks:
+      - chainlink-demo
     ports:
       - 6688:6688
     environment:
@@ -23,37 +25,46 @@ services:
     command: ["local", "n", "-p", "/chainlink/.password", "-a", "/chainlink/.api"]
     depends_on:
       - postgres
+      - orbit-db-http-api
+      - go-ipfs
 
   postgres:
     image: postgres:12.4-alpine
     # restart: always
+    networks:
+      - chainlink-demo
     environment:
       POSTGRES_PASSWORD: hackathon
       POSTGRES_USER: chainlink
 
 
-        #   orbit-db-http-api:
-        #     image: orbitdb/orbit-db-http-api
-        #     command: sh -c "sleep 5s && node src/cli.js api --ipfs-host go-ipfs"
-        #     environment:
-        #       HTTPS_CERT: "/api/dev.crt"
-        #       HTTPS_KEY: "/api/dev.key"
-        #     networks:
-        #       - chainlink-demo
-        #     depends_on:
-        #       - go-ipfs
-        #     volumes:
-        #       - ./dev.crt:/api/dev.crt
-        #       - ./dev.key:/api/dev.key
-        #     ports:
-        #       - "3000:3000"
-        # 
-        #   go-ipfs:
-        #     image: ipfs/go-ipfs:v0.6.0
-        #     networks:
-        #       - chainlink-demo
-        #     expose:
-        #       - "5001"
+  orbit-db-http-api:
+    image: orbitdb/orbit-db-http-api:998
+    command: sh -c "sleep 5s && node src/cli.js api"
+    environment:
+      HTTPS_CERT: "/api/dev.crt"
+      HTTPS_KEY: "/api/dev.key"
+      IPFS_HOST: "http://go-ipfs:5001"
+      IPFS_PORT: 5001
+    networks:
+      - chainlink-demo
+    depends_on:
+      - go-ipfs
+    volumes:
+      - ./dev.crt:/api/dev.crt
+      - ./dev.key:/api/dev.key
+    ports:
+      - "3000:3000"
+
+  go-ipfs:
+    image: ipfs/go-ipfs:v0.6.0
+    hostname: go-ipfs
+    networks:
+      - chainlink-demo
+    expose:
+      - "5001"
+    ports:
+      - 5001:5001
 
 networks:
   chainlink-demo:
