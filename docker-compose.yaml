@@ -42,8 +42,8 @@ services:
     image: orbitdb/orbit-db-http-api:998
     command: sh -c "sleep 5s && node src/cli.js api"
     environment:
-      HTTPS_CERT: "/api/dev.crt"
-      HTTPS_KEY: "/api/dev.key"
+      HTTPS_CERT: "/api/localhost.crt"
+      HTTPS_KEY: "/api/localhost.key"
       IPFS_HOST: "http://go-ipfs:5001"
       IPFS_PORT: 5001
     networks:
@@ -51,8 +51,8 @@ services:
     depends_on:
       - go-ipfs
     volumes:
-      - ./dev.crt:/api/dev.crt
-      - ./dev.key:/api/dev.key
+      - ./certs/localhost.crt:/api/localhost.crt
+      - ./certs/localhost.key:/api/localhost.key
     ports:
       - "3000:3000"
 
