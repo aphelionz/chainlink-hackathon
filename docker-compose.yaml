@@ -65,6 +65,8 @@ services:
       - "5001"
     ports:
       - 5001:5001
+    command: ["daemon", "--migrate=true", "--enable-pubsub-experiment"]
+
 
 networks:
   chainlink-demo:
