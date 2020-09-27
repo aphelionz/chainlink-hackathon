@@ -1,4 +1,4 @@
-const MyContract = artifacts.require('MyContract')
+const MyContract = artifacts.require('OrbitDbAPIConsumer')
 
 /*
   This script makes it easy to read the data variable

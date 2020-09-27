@@ -1,4 +1,4 @@
-const MyContract = artifacts.require('MyContract')
+const MyContract = artifacts.require('OrbitDbApiConsumer')
 
 /*
   This script allows for a Chainlink request to be created from

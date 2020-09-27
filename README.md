@@ -1,4 +1,4 @@
-# Chainlink Truffle Box
+# Chainlink OrbitDB API
 
 Implementation of a [Chainlink requesting contract](https://docs.chain.link/docs/create-a-chainlinked-project).
 
@@ -10,8 +10,20 @@ Implementation of a [Chainlink requesting contract](https://docs.chain.link/docs
 
 Package installation should have occurred for you during the Truffle Box setup. However, if you add dependencies, you'll need to add them to the project by running:
 
+Many of the dependencies are containerized via Docker and Docker Compose to make things easier.
+
+To set up:
+
 ```bash
-npm install
+$ sudo make root-cert
+$ sudo make keygen
+$ make up
+```
+
+To clean up:
+
+```bash
+make uninstall-root-cert
 ```
 
 Or

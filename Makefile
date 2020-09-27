@@ -1,4 +1,5 @@
 SHELL=/bin/bash
+.PHONY: test
 
 up:
 	docker-compose up -d
@@ -50,3 +51,9 @@ keygen:
 			keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment\n \
 			subjectAltName=DNS:localhost \
 			")
+
+test:
+	docker-compose up -d
+	yarn install
+	yarn test
+	docker-compose down

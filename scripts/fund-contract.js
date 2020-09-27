@@ -1,4 +1,4 @@
-const MyContract = artifacts.require('MyContract')
+const MyContract = artifacts.require('OrbitDbAPIConsumer')
 const LinkTokenInterface = artifacts.require('LinkTokenInterface')
 
 /*
